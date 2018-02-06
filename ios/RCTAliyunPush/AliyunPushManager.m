@@ -290,6 +290,20 @@ RCT_EXPORT_METHOD(listAliases:(RCTPromiseResolveBlock)resolve
     // 监听推送消息到达
     [self registerMessageReceive];
     
+    NSDictionary * userInfo = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+    if(userInfo)
+    {
+        NSMutableDictionary *notificationDict = [[NSMutableDictionary alloc] init];
+        
+        // 取得通知自定义字段内容
+        notificationDict[@"extras"] = userInfo;
+        
+        // 类型 “notification” or "message"
+        notificationDict[@"type"] = ALIYUN_PUSH_TYPE_NOTIFICATION;
+        
+        [self sendEventToJs:notificationDict];
+    }
+    
     // 点击通知将App从关闭状态启动时，将通知打开回执上报
     [CloudPushSDK sendNotificationAck:launchOptions];
     
