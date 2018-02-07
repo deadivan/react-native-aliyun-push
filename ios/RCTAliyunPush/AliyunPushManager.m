@@ -288,10 +288,14 @@ RCT_EXPORT_METHOD(listAliases:(RCTPromiseResolveBlock)resolve
     [self listenerOnChannelOpened];
     
     // 监听推送消息到达
-    [self registerMessageReceive];
+    //    [self registerMessageReceive];
     
     NSDictionary * userInfo = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-    if(userInfo)
+    
+    //    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:userInfo[@"url"] delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    //    [alert show];
+    
+    if(userInfo[@"url"])
     {
         NSMutableDictionary *notificationDict = [[NSMutableDictionary alloc] init];
         
@@ -300,8 +304,13 @@ RCT_EXPORT_METHOD(listAliases:(RCTPromiseResolveBlock)resolve
         
         // 类型 “notification” or "message"
         notificationDict[@"type"] = ALIYUN_PUSH_TYPE_NOTIFICATION;
+        __block AliyunPushManager *weakSelf = self;
+        dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC));
+        dispatch_after(delayTime, dispatch_get_main_queue(), ^{
+            [weakSelf sendEventToJs:notificationDict];
+        });
         
-        [self sendEventToJs:notificationDict];
+        //        [self sendEventToJs:notificationDict];
     }
     
     // 点击通知将App从关闭状态启动时，将通知打开回执上报
