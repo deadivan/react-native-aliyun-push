@@ -232,6 +232,11 @@ public class AliyunPushModule extends ReactContextBaseJavaModule implements Life
         });
     }
 
+    @ReactMethod
+    public void clearNotifications() {
+        PushServiceFactory.getCloudPushService().clearNotifications();
+    }
+
     @Override
     public void onHostResume() {
         ThirdPartMessageActivity.mainClass = getCurrentActivity().getClass();

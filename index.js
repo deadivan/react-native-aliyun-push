@@ -86,6 +86,10 @@ export default class AliyunPush {
         return AliyunPushNative.listAliases();
     }
 
+    static clearNotifications = () => {
+        return AliyunPushNative.clearNotifications();
+    }
+
     static addListener = (callback) => {
 
         AliyunPush._addListener(callback,"aliyunPushReceived");
